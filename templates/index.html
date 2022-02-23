@@ -1,0 +1,147 @@
+<html>
+    <style>
+        .prediction_remarks {
+        margin: top;
+        width: 100%;
+        white-space: pre-line;
+        border: 1px solid #ccc;
+        }
+
+        .transaction_date_dd {
+        width: 20px;
+        }
+
+        .tables{
+        width: 10px;
+        }
+    </style>
+    <script>
+        function getData(dropdown) {
+            var svalue = dropdown.options[dropdown.selectedIndex].value;
+            if (svalue == 'Pizzeria'){
+            document.getElementById("outlet_name").style.display = "block";
+            }
+            if(svalue == 'The Brunch Place'){
+            document.getElementById("channel").style.display = "block";
+            }
+            }
+    </script>
+    <head>
+        <title>Momos Recommendations</title>
+
+    </head>
+    <body bgcolor='lightgrey' text-align='center'>
+        <form action="{{url_for('predict')}}" method='post'>
+            <table>
+                <tr>
+                    <td>
+                        <label>Transaction Date</label>
+                    </td>
+                    <td><select id="transaction_date_dd" name="transaction_date_dd" onChange=";">
+                        <option value="01" onClick="">01</option>
+                        <option value="02" onClick="">02</option><option value="03" onClick="">03</option>
+                        <option value="04" onClick="">04</option><option value="05" onClick="">05</option>
+                        <option value="06" onClick="">06</option><option value="07" onClick="">07</option>
+                        <option value="08" onClick="">08</option><option value="09" onClick="">09</option>
+                        <option value="10" onClick="">10</option><option value="11" onClick="">11</option>
+                        <option value="12" onClick="">12</option><option value="13" onClick="">13</option>
+                        <option value="14" onClick="">14</option><option value="15" onClick="">15</option>
+                        <option value="16" onClick="">16</option><option value="17" onClick="">17</option>
+                        <option value="18" onClick="">18</option><option value="19" onClick="">19</option>
+                        <option value="20" onClick="">20</option><option value="21" onClick="">21</option>
+                        <option value="22" onClick="">22</option><option value="23" onClick="">23</option>
+                        <option value="24" onClick="">24</option><option value="25" onClick="">25</option>
+                        <option value="26" onClick="">26</option><option value="27" onClick="">27</option>
+                        <option value="28" onClick="">28</option><option value="29" onClick="">29</option>
+                        <option value="30" onClick="">30</option><option value="31" onClick="">31</option>
+                        </select>
+                    <select id="transaction_date_mm" name="transaction_date_mm" onChange=";">
+                        <option value="04" onClick="">04</option><option value="05" onClick="">05</option>
+                        <option value="06" onClick="">06</option><option value="07" onClick="">07</option>
+                        <option value="08" onClick="">08</option><option value="09" onClick="">09</option>
+                        <option value="10" onClick="">10</option><option value="11" onClick="">11</option>
+                        <option value="12" onClick="">12</option>
+                        </select>
+                    <input type = "text" name = "transaction_date_yyyy" value="2020" readonly=True size=1/>
+                    <label>* Input Range between 2020-04-01 and 2020-12-31)</label></td>
+                </tr><br>
+
+            <tr><td><label>Brand Name</label></td>
+                <td><select id="brand_name" name="brand_name" onChange="getData(this);">
+                    <option value="Pizzeria" onClick="">Pizzeria</option>
+                    <option value="The Brunch Place">The Brunch Place</option>
+               </select>
+                
+                </td></tr><br>
+
+            <tr><td><label>Outlet Name</label></td>
+                <td>
+                    <select id="outlet_name" name="outlet_name" onChange=";">
+                        <option value="Pizzeria - Central" onClick="">Pizzeria - Central</option>
+                        <option value="Pizzeria - East">Pizzeria - East</option>
+                        <option value="The Brunch Place - Central">The Brunch Place - Central</option>
+                        <option value="The Brunch Place - East">The Brunch Place - East</option>
+                </td></tr><br>
+                    
+            <tr><td><label>Channel</label></td>
+                <td>
+                    <select id="channel" name="channel" onChange=";">
+                        <option value="Platform A" onClick="">Platform A</option>
+                        <option value="Platform B">Platform B</option>
+                        <option value="Platform C">Platform C</option>
+                        <option value="Facebook">Facebook</option>
+                    
+                </td></tr><br>
+            
+            <tr><td><label>Transaction Hour</label></td>
+                <td>
+                    <select id="transaction_hour" name="transaction_hour" onChange=";">
+                        <option value="0" onClick="">00</option><option value="1" onClick="">01</option>
+                        <option value="2" onClick="">02</option><option value="3" onClick="">03</option>
+                        <option value="4" onClick="">04</option><option value="5" onClick="">05</option>
+                        <option value="6" onClick="">06</option><option value="7" onClick="">07</option>
+                        <option value="8" onClick="">08</option><option value="9" onClick="">09</option>
+                        <option value="10" onClick="">10</option><option value="11" onClick="">11</option>
+                        <option value="12" onClick="">12</option><option value="13" onClick="">13</option>
+                        <option value="14" onClick="">14</option><option value="15" onClick="">15</option>
+                        <option value="16" onClick="">16</option><option value="17" onClick="">17</option>
+                        <option value="18" onClick="">18</option><option value="19" onClick="">19</option>
+                        <option value="20" onClick="">20</option><option value="21" onClick="">21</option>
+                        <option value="22" onClick="">22</option><option value="23" onClick="">23</option>
+
+                </td></tr><br>
+              
+            <tr><td><label>Click Recommend to get recommendations</label></td><td><button type = "submit">Recommend</button></td></tr>
+            </table>
+
+        </form>
+
+        <div class="prediction" halign="left" valign="bottom" width="5" text-align="left">
+            <table text-align="left">
+                <tr>
+                    <td>
+                        {% if prediction %}
+                            <br> Prediction Results:
+                            <p style="font-size:16px">{{ prediction|safe }}</p>
+                        {% endif %}
+                    </td>
+                    <td width="2">{% for table in brandtable %}
+                        {{ table|safe }}
+                        {% endfor %}</td>
+
+                    <td width="2">{% for table in outlettable %}
+                        {{ table|safe }}
+                        {% endfor %}</td>
+
+                    <td width="2">{% for table in channeltable %}
+                        {{ table|safe }}
+                        {% endfor %}</td>
+    
+ 
+                </tr>
+            </table>
+        </div>
+
+        
+    </body>
+</html>
